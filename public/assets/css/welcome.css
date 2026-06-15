@@ -1,0 +1,103 @@
+body{
+    background:#640eeec5; /* Pink */
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.welcome-box{ 
+    width: 70%;
+    min-height:500px;
+    background:white;
+    border-radius:5px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+            
+}
+
+.food-image{
+    height:600px;
+    background:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')
+    center center/cover no-repeat;
+    position:relative;
+}
+
+.overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+}
+
+.content{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    text-align:center;
+    color:white;
+    z-index:2;
+}
+
+.content h1{
+    font-size:2.5rem;
+    font-weight:bold;
+}
+
+.content p{
+    margin-top:10px;
+}
+
+.right-panel{
+    position:relative;
+    height:600px;
+    background:#fff;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Top Right Circle */
+.top-circle{
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    top:-40px;
+    right:-40px;
+
+    background:linear-gradient(
+        135deg,
+        #ff5f9e,
+        #8e2de2
+    );
+}
+
+/* Bottom Left Circle */
+.bottom-circle{
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    bottom:-70px;
+    left:-70px;
+
+    background:linear-gradient(
+        135deg,
+        #ff5f9e,
+        #8e2de2
+    );
+}
+
+.login-content{
+    position:relative;
+    z-index:10;
+}
+.btn-custom{
+    width:220px;
+    margin-bottom:15px;
+}

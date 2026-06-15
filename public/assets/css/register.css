@@ -1,0 +1,32 @@
+#container {
+    background-image: url('/assets/images/photo.jpg');
+    background-size: cover;        /* Covers entire container */
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+    image-rendering: high-quality;
+
+}
+#column {
+    margin: 4% 8% 1% 5%;
+    padding-right: 30px;
+    
+}
+
+#reg_header {
+    background: rgb(142, 103, 180);
+    color: white;
+    padding: 19px 0px;
+    font-size: 22px;
+    letter-spacing: 2px;
+    text-align: center;
+ 
+}
+#email,#name,#password-confirm,#password {
+    border-radius: 5px;
+    height: 40px;
+}
+#reg_card {
+    background: rgba(240, 234, 219, 0.377);
+}
