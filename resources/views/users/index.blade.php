@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <h1>User Management</h1>
     <div class="card-body p-4" id="card">
-        <form method="POST" action="#">
+        <form action="{{ route('users.store') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label class="form-label fw-semibold">Name</label>
