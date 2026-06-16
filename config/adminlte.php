@@ -319,6 +319,11 @@ return [
             'text' => 'User Management',
             'url'  => 'users',
             'icon' => 'fas fa-users',
+        ],
+        [
+            'text' => 'User List',
+            'url'  => 'users/list',
+            'icon' => 'fas fa-users',
         ],     
     ],
 
