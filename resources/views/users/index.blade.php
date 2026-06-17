@@ -23,8 +23,8 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold">Category</label>
                 <select name="role" class="form-control">
+                    <option value="#">Select</option>
                     <option value="manager">Manager</option>
-                    <option value="supplier">Supplier</option>
                     <option value="staff">Staff</option>
                 </select>
             </div>
