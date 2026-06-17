@@ -314,17 +314,60 @@ return [
         [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
+        ], 
+        [
+            'text'    => 'Staff Management',
+            'icon'    => 'fas fa-boxes',
+            'submenu' => [
+                [
+                    'text' => 'Add Staff ',
+                    'url'  => 'users',
+                    'icon' => 'fas fa-plus-circle',
+                ],
+                [
+                    'text' => 'Staff List',
+                    'url'  => 'users/list',
+                    'icon' => 'fas fa-list',
+                ],
+            ],
         ],
         [
-            'text' => 'User Management',
-            'url'  => 'users',
-            'icon' => 'fas fa-users',
+            'text'    => 'Supplier Management',
+            'icon'    => 'fas fa-boxes',
+            'submenu' => [
+                [
+                    'text' => 'Add Supplier',
+                    'url'  => 'suppliers',
+                    'icon' => 'fas fa-plus-circle',
+                ],
+                [
+                    'text' => 'suppliers List',
+                    'url'  => 'suppliers/list',
+                    'icon' => 'fas fa-list',
+                ],
+            ],
+        ], 
+        [
+            'text'    => 'Inventory Management',
+            'icon'    => 'fas fa-boxes',
+            'submenu' => [
+                [
+                    'text' => 'Add Item / Stock',
+                    'url'  => 'inventory',
+                    'icon' => 'fas fa-plus-circle',
+                ],
+                [
+                    'text' => 'Inventory List',
+                    'url'  => 'inventory/list',
+                    'icon' => 'fas fa-list',
+                ],
+            ],
         ],
         [
-            'text' => 'User List',
-            'url'  => 'users/list',
+            'text' => 'Item Add',
+            'url'  => 'items',
             'icon' => 'fas fa-users',
-        ],     
+        ],   
     ],
 
     /*
