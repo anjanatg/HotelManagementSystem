@@ -15,6 +15,7 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::post('/users/check-name', [UserManagementController::class, 'checkName'])->name('users.checkName');
     Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
     Route::get('/users/list', [UserManagementController::class, 'list'])->name('users.list'); 
     Route::get('/users/{id}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
@@ -34,7 +35,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
     Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
     Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
-    
+    Route::get('/inventory/use', [InventoryController::class, 'useItemForm'])->name('inventory.use');
+    Route::post('/inventory/use', [InventoryController::class, 'useItem'])->name('inventory.useItem');
+
     Route::get('/items', [ItemController::class, 'index'])->name('items.index');
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');
     Route::get('/items/{id}/edit', [ItemController::class, 'edit'])->name('items.edit');

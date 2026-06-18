@@ -52,7 +52,7 @@ class InventoryController extends Controller
         $item = Inventory::findOrFail($id);
 
         $request->validate([
-            'item_name'            => 'required|unique:inventory_items,item_name,' . $id,
+            'item_name'            => 'required|unique:inventory,item_name,' . $id,
             'unit'                 => 'required',
             'quantity'             => 'required|numeric|min:0',
             'minimum_stock_level'  => 'required|numeric|min:0',
@@ -75,4 +75,34 @@ class InventoryController extends Controller
         return redirect()->route('inventory.list')
                          ->with('success', 'Item deleted successfully');
     }
+    public function useItemForm()
+{
+    $items = Inventory::all(); 
+    return view('inventory.use', compact('items'));
+}
+
+public function useItem(Request $request)
+{
+    $request->validate([
+        'inventory_id' => 'required|exists:inventory,id',
+        'used_quantity' => 'required|numeric|min:1',
+    ]);
+
+    $item = Inventory::findOrFail($request->inventory_id);
+
+    if ($request->used_quantity > $item->quantity) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Insufficient stock. Available: ' . $item->quantity,
+        ]);
+    }
+
+    $item->quantity -= $request->used_quantity;
+    $item->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Stock updated successfully. Remaining: ' . $item->quantity,
+    ]);
+}
 }

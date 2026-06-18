@@ -34,12 +34,10 @@
                 </select>
                 @error('item_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
             </div>
-
             <div class="form-group">
                 <label>Unit</label>
                 <input type="text" name="unit" id="unit" class="form-control" readonly value="{{ old('unit') }}">
             </div>
-
             <div class="form-group">
                 <label>Quantity</label>
                 <input type="number" name="quantity" class="form-control" value="{{ old('quantity') }}">

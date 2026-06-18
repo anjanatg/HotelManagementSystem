@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserManagement;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserManagementController extends Controller
 {
     public function index()
     {
         return view('users.index');
+    }
+    public function checkName(Request $request)
+    {
+        $exists = UserManagement::where('name', $request->name)->exists();
+        return response()->json(['exists' => $exists]);
     }
 
     public function store(Request $request)
@@ -34,13 +40,32 @@ class UserManagementController extends Controller
                          ->with('success', 'User added successfully');
     }
 
-    public function list()
-    {
-        $users = UserManagement::all();
-        return view('users.view', compact('users'));
+    public function list(Request $request)
+{
+    if ($request->ajax()) {
+        $data = UserManagement::select('*');
+
+        return DataTables::of($data)
+            ->addColumn('action', function ($row) {
+                $editUrl = route('users.edit', $row->id);
+                $deleteUrl = route('users.destroy', $row->id);
+
+                $btn = '<a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>';
+                $btn .= ' <form action="' . $deleteUrl . '" method="POST" style="display:inline;">';
+                $btn .= csrf_field();
+                $btn .= method_field('DELETE');
+                $btn .= '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Delete this user?\')">Delete</button>';
+                $btn .= '</form>';
+
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
-    // ✅ ഇത് മുതൽ താഴേക്ക് add ചെയ്യൂ
+    return view('users.view');
+}
+
     public function edit($id)
     {
         $user = UserManagement::findOrFail($id);
