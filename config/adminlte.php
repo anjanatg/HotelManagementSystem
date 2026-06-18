@@ -352,22 +352,28 @@ return [
             'icon'    => 'fas fa-boxes',
             'submenu' => [
                 [
-                    'text' => 'Add Item / Stock',
+                    'text' => 'Add Item',
+                    'url'  => 'items',
+                    'icon' => 'fas fa-users',
+                ],
+                [
+                    'text' => 'Add Item Stock',
                     'url'  => 'inventory',
                     'icon' => 'fas fa-plus-circle',
                 ],
                 [
-                    'text' => 'Inventory List',
+                    'text' => 'Item Stock List',
                     'url'  => 'inventory/list',
                     'icon' => 'fas fa-list',
                 ],
+                [
+                    'text' => 'Use Item',
+                    'url'  => 'inventory/use',
+                    'icon' => 'fas fa-plus-circle',
+                ],
             ],
         ],
-        [
-            'text' => 'Item Add',
-            'url'  => 'items',
-            'icon' => 'fas fa-users',
-        ],   
+           
     ],
 
     /*
@@ -472,6 +478,16 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'AjaxNav' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type'     => 'js',
+                    'asset'    => true,
+                    'location' => 'js/ajax-nav.js',
                 ],
             ],
         ],

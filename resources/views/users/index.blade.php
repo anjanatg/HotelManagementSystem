@@ -6,11 +6,12 @@
 <div class="container-fluid">
     <h1>User Management</h1>
     <div class="card-body p-4" id="card">
-        <form action="{{ route('users.store') }}" method="POST">
+        <form action="{{ route('users.store') }}" method="POST" id="userForm">
             @csrf
             <div class="mb-3">
                 <label class="form-label fw-semibold">Name</label>
-                <input type="text" name="name" class="form-control" placeholder="Enter the Name">
+                <input type="text" name="name" id="name" class="form-control" placeholder="Enter the Name">
+                <span id="nameError" class="text-danger" style="display:none;">This name already exists.</span>
             </div>
             <div class="mb-3">
                 <label class="form-label fw-semibold">Email</label>
@@ -36,12 +37,16 @@
                 </select>
             </div>
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">
                     Save Product
                 </button>
             </div>
         </form>
     </div>
 </div>
-    
+
+<script>
+    window.checkNameRoute = "{{ route('users.checkName') }}"; 
+</script>
+<script src="{{ asset('js/check-name.js') }}"></script>
 @endsection

@@ -1,6 +1,5 @@
 @extends('adminlte::page')
 @section('title', 'Edit Inventory Item')
-
 @section('content')
 <div class="card">
     <div class="card-header"><h3>Edit Inventory Item</h3></div>
@@ -38,7 +37,6 @@
             <button type="submit" class="btn btn-success">Update Item</button>
             <a href="{{ route('inventory.list') }}" class="btn btn-secondary">Cancel</a>
         </form>
-
     </div>
 </div>
 @endsection

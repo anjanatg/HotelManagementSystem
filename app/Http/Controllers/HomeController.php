@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Item;
+use App\Models\UserManagement;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $itemCount  = Item::count();
+        $staffCount = UserManagement::where('role', 'staff')->count(); 
+
+        return view('home', compact('itemCount', 'staffCount'));
     }
 }
