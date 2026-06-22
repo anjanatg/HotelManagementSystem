@@ -318,6 +318,7 @@ return [
         [
             'text'    => 'Staff Management',
             'icon'    => 'fas fa-boxes',
+            'can' => 'admin-access',
             'submenu' => [
                 [
                     'text' => 'Add Staff ',

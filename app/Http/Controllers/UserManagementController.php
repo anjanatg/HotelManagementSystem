@@ -3,94 +3,72 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UserManagement;
+use App\Services\UserManagementService;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserManagementController extends Controller
 {
+    protected UserManagementService $userService;
+
+    public function __construct(UserManagementService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
         return view('users.index');
     }
+
     public function checkName(Request $request)
     {
-        $exists = UserManagement::where('name', $request->name)->exists();
+        $exists = $this->userService->nameExists($request->name);
         return response()->json(['exists' => $exists]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name'   => 'required|unique:user_management,name',
-            'email'  => 'required|email|unique:user_management,email',
-            'phone'  => 'required|numeric|digits:10',
-            'role'   => 'required',
-            'status' => 'required',
-        ]);
-
-        UserManagement::create([
-            'name'   => $request->name,
-            'email'  => $request->email,
-            'phone'  => $request->phone,
-            'role'   => $request->role,
-            'status' => $request->status,
-        ]);
+        $this->userService->create($request->all());
 
         return redirect()->route('users.list')
                          ->with('success', 'User added successfully');
     }
 
     public function list(Request $request)
-{
-    if ($request->ajax()) {
-        $data = UserManagement::select('*');
+    {
+        if ($request->ajax()) {
+            $data = $this->userService->getAll();
 
-        return DataTables::of($data)
-            ->addColumn('action', function ($row) {
-                $editUrl = route('users.edit', $row->id);
-                $deleteUrl = route('users.destroy', $row->id);
+            return DataTables::of($data)
+                ->addColumn('action', function ($row) {
+                    $editUrl = route('users.edit', $row->id);
+                    $deleteUrl = route('users.destroy', $row->id);
 
-                $btn = '<a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>';
-                $btn .= ' <form action="' . $deleteUrl . '" method="POST" style="display:inline;">';
-                $btn .= csrf_field();
-                $btn .= method_field('DELETE');
-                $btn .= '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Delete this user?\')">Delete</button>';
-                $btn .= '</form>';
+                    $btn = '<a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>';
+                    $btn .= ' <form action="' . $deleteUrl . '" method="POST" style="display:inline;">';
+                    $btn .= csrf_field();
+                    $btn .= method_field('DELETE');
+                    $btn .= '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Delete this user?\')">Delete</button>';
+                    $btn .= '</form>';
 
-                return $btn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('users.view');
     }
-
-    return view('users.view');
-}
 
     public function edit($id)
     {
-        $user = UserManagement::findOrFail($id);
+        $user = $this->userService->find($id);
         return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
     {
-        $user = UserManagement::findOrFail($id);
-
-        $request->validate([
-            'name'   => 'required|unique:user_management,name,' . $id,
-            'email'  => 'required|email|unique:user_management,email,' . $id,
-            'phone'  => 'required|numeric|digits:10',
-            'role'   => 'required',
-            'status' => 'required',
-        ]);
-
-        $user->update([
-            'name'   => $request->name,
-            'email'  => $request->email,
-            'phone'  => $request->phone,
-            'role'   => $request->role,
-            'status' => $request->status,
-        ]);
+        $this->userService->update($id, $request->all());
 
         return redirect()->route('users.list')
                          ->with('success', 'User updated successfully');
@@ -98,7 +76,8 @@ class UserManagementController extends Controller
 
     public function destroy($id)
     {
-        UserManagement::findOrFail($id)->delete();
+        $this->userService->delete($id);
+
         return redirect()->route('users.list')
                          ->with('success', 'User deleted successfully');
     }

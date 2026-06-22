@@ -3,33 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Inventory;
-use App\Models\Item;
+use App\Services\InventoryService;
 
 class InventoryController extends Controller
 {
+    protected InventoryService $inventoryService;
+
+    public function __construct(InventoryService $inventoryService)
+    {
+        $this->inventoryService = $inventoryService;
+    }
+
     public function index()
     {
-        $items = Item::all(); 
+        $items = $this->inventoryService->getAllItems();
         return view('inventory.index', compact('items'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'item_id'              => 'required|exists:items,id', 
-            'quantity'             => 'required|numeric|min:0',
-            'minimum_stock_level'  => 'required|numeric|min:0',
-        ]);
-
-        $item = Item::findOrFail($request->item_id);
-
-        Inventory::create([
-            'item_name'            => $item->item_name,
-            'unit'                 => $item->unit,
-            'quantity'             => $request->quantity,
-            'minimum_stock_level'  => $request->minimum_stock_level,
-        ]);
+        $this->inventoryService->create($request->all());
 
         return redirect()->route('inventory.list')
                          ->with('success', 'Item added successfully');
@@ -37,33 +30,19 @@ class InventoryController extends Controller
 
     public function list()
     {
-        $items = Inventory::all();
+        $items = $this->inventoryService->getAll();
         return view('inventory.view', compact('items'));
     }
 
     public function edit($id)
     {
-        $item = Inventory::findOrFail($id);
+        $item = $this->inventoryService->find($id);
         return view('inventory.edit', compact('item'));
     }
 
     public function update(Request $request, $id)
     {
-        $item = Inventory::findOrFail($id);
-
-        $request->validate([
-            'item_name'            => 'required|unique:inventory,item_name,' . $id,
-            'unit'                 => 'required',
-            'quantity'             => 'required|numeric|min:0',
-            'minimum_stock_level'  => 'required|numeric|min:0',
-        ]);
-
-        $item->update([
-            'item_name'            => $request->item_name,
-            'unit'                 => $request->unit,
-            'quantity'             => $request->quantity,
-            'minimum_stock_level'  => $request->minimum_stock_level,
-        ]);
+        $this->inventoryService->update($id, $request->all());
 
         return redirect()->route('inventory.list')
                          ->with('success', 'Item updated successfully');
@@ -71,38 +50,22 @@ class InventoryController extends Controller
 
     public function destroy($id)
     {
-        Inventory::findOrFail($id)->delete();
+        $this->inventoryService->delete($id);
+
         return redirect()->route('inventory.list')
                          ->with('success', 'Item deleted successfully');
     }
+
     public function useItemForm()
-{
-    $items = Inventory::all(); 
-    return view('inventory.use', compact('items'));
-}
-
-public function useItem(Request $request)
-{
-    $request->validate([
-        'inventory_id' => 'required|exists:inventory,id',
-        'used_quantity' => 'required|numeric|min:1',
-    ]);
-
-    $item = Inventory::findOrFail($request->inventory_id);
-
-    if ($request->used_quantity > $item->quantity) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Insufficient stock. Available: ' . $item->quantity,
-        ]);
+    {
+        $items = $this->inventoryService->getAll();
+        return view('inventory.use', compact('items'));
     }
 
-    $item->quantity -= $request->used_quantity;
-    $item->save();
+    public function useItem(Request $request)
+    {
+        $result = $this->inventoryService->useItem($request->all());
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Stock updated successfully. Remaining: ' . $item->quantity,
-    ]);
-}
+        return response()->json($result);
+    }
 }

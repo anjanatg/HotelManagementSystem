@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Supplier;
+use App\Services\SupplierService;
 
 class SupplierController extends Controller
 {
+    protected SupplierService $supplierService;
+
+    public function __construct(SupplierService $supplierService)
+    {
+        $this->supplierService = $supplierService;
+    }
+
     public function index()
     {
         return view('suppliers.index');
@@ -14,23 +21,7 @@ class SupplierController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name'    => 'required|unique:suppliers,name',
-            'email'   => 'required|email|unique:suppliers,email',
-            'phone'   => 'required|numeric|digits:10',
-            'company' => 'required',
-            'address' => 'required',
-            'status'  => 'required',
-        ]);
-
-        Supplier::create([
-            'name'    => $request->name,
-            'email'   => $request->email,
-            'phone'   => $request->phone,
-            'company' => $request->company,
-            'address' => $request->address,
-            'status'  => $request->status,
-        ]);
+        $this->supplierService->create($request->all());
 
         return redirect()->route('suppliers.list')
                          ->with('success', 'Supplier added successfully');
@@ -38,37 +29,19 @@ class SupplierController extends Controller
 
     public function list()
     {
-        $suppliers = Supplier::all();
+        $suppliers = $this->supplierService->getAll();
         return view('suppliers.view', compact('suppliers'));
     }
 
     public function edit($id)
     {
-        $supplier = Supplier::findOrFail($id);
+        $supplier = $this->supplierService->find($id);
         return view('suppliers.edit', compact('supplier'));
     }
 
     public function update(Request $request, $id)
     {
-        $supplier = Supplier::findOrFail($id);
-
-        $request->validate([
-            'name'    => 'required|unique:suppliers,name,' . $id,
-            'email'   => 'required|email|unique:suppliers,email,' . $id,
-            'phone'   => 'required|numeric|digits:10',
-            'company' => 'required',
-            'address' => 'required',
-            'status'  => 'required',
-        ]);
-
-        $supplier->update([
-            'name'    => $request->name,
-            'email'   => $request->email,
-            'phone'   => $request->phone,
-            'company' => $request->company,
-            'address' => $request->address,
-            'status'  => $request->status,
-        ]);
+        $this->supplierService->update($id, $request->all());
 
         return redirect()->route('suppliers.list')
                          ->with('success', 'Supplier updated successfully');
@@ -76,7 +49,8 @@ class SupplierController extends Controller
 
     public function destroy($id)
     {
-        Supplier::findOrFail($id)->delete();
+        $this->supplierService->delete($id);
+
         return redirect()->route('suppliers.list')
                          ->with('success', 'Supplier deleted successfully');
     }
