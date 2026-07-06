@@ -16,7 +16,7 @@
             </div>
         @endif
 
-        <form action="{{ route('users.update', $user->id) }}" method="POST">
+        <form action="{{ route('users.update', $user->id) }}" method="POST" data-no-ajax-nav>
             @csrf
             @method('PUT')
             <div class="form-group">

@@ -68,4 +68,9 @@ class InventoryController extends Controller
 
         return response()->json($result);
     }
+    public function getItemInfo($item_id)
+    {
+        $info = $this->inventoryService->getItemInfo($item_id);
+        return response()->json($info);
+    }
 }

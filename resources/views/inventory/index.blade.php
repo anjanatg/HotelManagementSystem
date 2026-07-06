@@ -24,7 +24,7 @@
             @csrf
             <div class="form-group">
                 <label>Item Name</label>
-                <select name="item_id" id="item_id" class="form-control @error('item_id') is-invalid @enderror" onchange="updateUnit()">
+                <select name="item_id" id="item_id" class="form-control @error('item_id') is-invalid @enderror">
                     <option value="">-- Select Item --</option>
                     @foreach($items as $item)
                     <option value="{{ $item->id }}" data-unit="{{ $item->unit }}" {{ old('item_id') == $item->id ? 'selected' : '' }}>
@@ -33,6 +33,8 @@
                     @endforeach
                 </select>
                 @error('item_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
+               <small id="existingStockInfo" class="text-muted" style="display:none;"></small>
+
             </div>
             <div class="form-group">
                 <label>Unit</label>
@@ -44,20 +46,15 @@
             </div>
             <div class="form-group">
                 <label>Minimum Stock Level</label>
-                <input type="number" name="minimum_stock_level" class="form-control" value="{{ old('minimum_stock_level') }}">
+                <input type="number" name="minimum_stock_level" id="minimum_stock_level" class="form-control" value="{{ old('minimum_stock_level') }}">
             </div>
             <button type="submit" class="btn btn-primary">Add Item</button>
         </form>
 
     </div>
 </div>
-
 <script>
-function updateUnit() {
-    const select = document.getElementById('item_id');
-    const selectedOption = select.options[select.selectedIndex];
-    const unit = selectedOption.getAttribute('data-unit') || '';
-    document.getElementById('unit').value = unit;
-}
+    window.itemInfoRouteBase = "{{ url('inventory/item-info') }}";
 </script>
+<script src="{{ asset('js/inventory.js') }}"></script>
 @endsection

@@ -65,11 +65,34 @@ class InventoryService
      *
      * @throws ValidationException
      */
+
+    public function getItemInfo($item_id): array
+    {
+        $item = Item::findOrFail($item_id);
+
+        $existing = Inventory::where('item_name', $item->item_name)->first();
+
+        return [
+            'exists'              => (bool) $existing,
+            'unit'                => $item->unit,
+            'current_quantity'    => $existing->quantity ?? 0,
+            'minimum_stock_level' => $existing->minimum_stock_level ?? '',
+        ];
+    }
+    
     public function create(array $data): Inventory
     {
         $validated = Validator::make($data, $this->storeRules())->validate();
-
         $item = Item::findOrFail($validated['item_id']);
+        $existing = Inventory::where('item_name', $item->item_name)->first();
+
+        if ($existing) {
+            $existing->quantity += $validated['quantity'];
+            $existing->minimum_stock_level = $validated['minimum_stock_level'];
+            $existing->save();
+
+            return $existing;
+        }
 
         return Inventory::create([
             'item_name'           => $item->item_name,

@@ -20,7 +20,7 @@
                 <div class="food-image">
                     <div class="overlay"></div>
                     <div class="content">
-                        <h1>Restaurant Management System</h1>
+                        <h1>Hotel Management System</h1>
                         <p class="fs-5">
                             Manage Food Items, Orders, Inventory and Suppliers
                         </p>

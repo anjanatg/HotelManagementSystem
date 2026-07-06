@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
     Route::get('/inventory/use', [InventoryController::class, 'useItemForm'])->name('inventory.use');
     Route::post('/inventory/use', [InventoryController::class, 'useItem'])->name('inventory.useItem');
+    Route::get('/inventory/item-info/{item_id}', [InventoryController::class, 'getItemInfo'])->name('inventory.itemInfo');
 
     Route::get('/items', [ItemController::class, 'index'])->name('items.index');
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');

@@ -28,7 +28,7 @@
                 <input type="text" name="unit" class="form-control" value="{{ old('unit', $item->unit) }}">
             </div>
             <button type="submit" class="btn btn-success">Update Item</button>
-            <a href="{{ route('items.list') }}" class="btn btn-secondary">Cancel</a>
+            <a href="{{ route('items.index') }}" class="btn btn-secondary">Cancel</a>
         </form>
 
     </div>

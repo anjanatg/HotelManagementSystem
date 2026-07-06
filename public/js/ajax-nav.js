@@ -18,7 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
 
-            if (fullReloadPaths.some(p => href.indexOf(p) !== -1)) {
+            if (fullReloadPaths.some(p => href.includes(p))) {
+                link.addEventListener('click', function () {
+                    window.location.href = href;
+                });
                 return;
             }
 

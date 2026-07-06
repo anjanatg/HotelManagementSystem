@@ -38,7 +38,7 @@ class UserManagementService
 
     public function getAll()
     {
-        return UserManagement::all();
+        return UserManagement::query();;
     }
 
     public function find(int $id): UserManagement

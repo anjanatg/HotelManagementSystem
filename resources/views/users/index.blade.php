@@ -6,7 +6,13 @@
 <div class="container-fluid">
     <h1>User Management</h1>
     <div class="card-body p-4" id="card">
-        <form action="{{ route('users.store') }}" method="POST" id="userForm">
+         @if(session('success'))
+         <div class="alert alert-success alert-dismissible fade show">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+        <form action="{{ route('users.store') }}" method="POST" id="userForm" data-no-ajax-nav>
             @csrf
             <div class="mb-3">
                 <label class="form-label fw-semibold">Name</label>
@@ -38,7 +44,7 @@
             </div>
             <div class="d-grid">
                 <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">
-                    Save Product
+                    Save User
                 </button>
             </div>
         </form>
@@ -47,6 +53,8 @@
 
 <script>
     window.checkNameRoute = "{{ route('users.checkName') }}"; 
+    window.usersListRoute = "{{ route('users.list') }}";
 </script>
 <script src="{{ asset('js/check-name.js') }}"></script>
+<script src="{{ asset('js/save-handler.js')}}"></script>
 @endsection

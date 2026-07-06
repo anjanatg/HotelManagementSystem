@@ -1,52 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('userForm');
     const nameInput = document.getElementById('name');
     const nameError = document.getElementById('nameError');
-    const form = document.getElementById('userForm');
-    let nameExists = false;
 
-    if (!nameInput || !form) return;
-
-    nameInput.addEventListener('blur', function () {
-        const name = nameInput.value.trim();
-
-        if (!name) {
-            nameError.style.display = 'none';
-            nameInput.classList.remove('is-invalid');
-            nameExists = false;
-            return;
-        }
-
-        fetch(window.checkNameRoute, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ name: name })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.exists) {
-                nameError.style.display = 'inline';
-                nameInput.classList.add('is-invalid');
-                nameExists = true;
-            } else {
-                nameError.style.display = 'none';
-                nameInput.classList.remove('is-invalid');
-                nameExists = false;
-            }
-        })
-        .catch(err => console.error(err));
-    });
+    if (!form) return;
 
     form.addEventListener('submit', function (e) {
-        e.preventDefault(); 
-        if (nameExists) {
+        e.preventDefault();
+
+        if (window.nameExists) {
             nameError.style.display = 'inline';
             nameInput.classList.add('is-invalid');
             nameInput.focus();
-            return; 
+            return;
         }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+
+        // Loading state ON
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Saving...`;
 
         const formData = new FormData(form);
 
@@ -62,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (!response.ok) {
-                
                 if (data.errors && data.errors.name) {
                     nameError.textContent = data.errors.name[0];
                     nameError.style.display = 'inline';
@@ -70,16 +43,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     alert(data.message || 'Something went wrong. Please try again.');
                 }
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
                 return;
             }
 
             if (data.success) {
                 window.location.href = window.usersListRoute;
+                return; // page navigate cheyyum, button reset venda
             }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
         })
         .catch(error => {
             console.error('Error:', error);
             alert('Something went wrong. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
         });
     });
 });

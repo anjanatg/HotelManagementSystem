@@ -5,7 +5,23 @@
 <div class="card">
     <div class="card-header">
         <h3>Inventory List</h3>
-        <a href="{{ route('inventory.index') }}" class="btn btn-primary btn-sm float-right">+ Add Item</a>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Search Item</label>
+                <input type="text" id="itemSearch" class="form-control" placeholder="Search by item name...">
+            </div>
+            <div class="col-md-4">
+                <label>Filter by Status</label>
+                <select id="statusFilter" class="form-control">
+                    <option value="all">All</option>
+                    <option value="Available">Available</option>
+                    <option value="Low Stock">Low Stock</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <a href="{{ route('inventory.index') }}" class="btn btn-primary btn-sm float-right">+ Add Item</a>
+            </div>
+        </div>
     </div>
     <div class="card-body">
 
@@ -13,7 +29,7 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="inventoryTable">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -27,7 +43,7 @@
             </thead>
             <tbody>
                 @foreach($items as $item)
-                <tr>
+                <tr data-status="{{ $item->status }}" data-name="{{ strtolower($item->item_name) }}">
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->item_name }}</td>
                     <td>{{ $item->unit }}</td>
@@ -52,6 +68,8 @@
                 @endforeach
             </tbody>
         </table>
+        <p id="noResultsMsg" style="display:none; text-align:center; color:#888;">No items match your search/filter.</p>
     </div>
 </div>
+<script src="{{ asset('js/inventory.js') }}"></script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserManagementService;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\UserManagement;
 
 class UserManagementController extends Controller
 {
@@ -30,17 +31,23 @@ class UserManagementController extends Controller
     {
         $this->userService->create($request->all());
 
-        return redirect()->route('users.list')
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'User added successfully']);
+        }
+
+        return redirect()->route('users.index')
                          ->with('success', 'User added successfully');
     }
 
     public function list(Request $request)
     {
         if ($request->ajax()) {
+
             $data = $this->userService->getAll();
 
             return DataTables::of($data)
                 ->addColumn('action', function ($row) {
+
                     $editUrl = route('users.edit', $row->id);
                     $deleteUrl = route('users.destroy', $row->id);
 
@@ -59,7 +66,6 @@ class UserManagementController extends Controller
 
         return view('users.view');
     }
-
     public function edit($id)
     {
         $user = $this->userService->find($id);
